@@ -22,7 +22,15 @@ namespace Complete
 
         private void OnTriggerEnter (Collider other)
         {
-			// Collect all the colliders in a sphere from the shell's current position to a radius of the explosion radius.
+            // If target = BreakObject
+            BreakObject breakObject = other.gameObject.GetComponent<BreakObject>();
+            if (breakObject)
+            {
+                breakObject.Broken();
+            }
+
+
+            // Collect all the colliders in a sphere from the shell's current position to a radius of the explosion radius.
             Collider[] colliders = Physics.OverlapSphere (transform.position, m_ExplosionRadius, m_TankMask);
 
             // Go through all the colliders...
@@ -37,13 +45,6 @@ namespace Complete
 
                 // Add an explosion force.
                 targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
-
-                // If target = BreakObject
-                BreakObject breakObject = targetRigidbody.GetComponent<BreakObject>();
-                if (breakObject)
-                {
-                    breakObject.Broken();
-                }
 
                 // Find the TankHealth script associated with the rigidbody.
                 TankHealth targetHealth = targetRigidbody.GetComponent<TankHealth> ();
