@@ -38,6 +38,13 @@ namespace Complete
                 // Add an explosion force.
                 targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
 
+                // If target = BreakObject
+                BreakObject breakObject = targetRigidbody.GetComponent<BreakObject>();
+                if (breakObject)
+                {
+                    breakObject.Broken();
+                }
+
                 // Find the TankHealth script associated with the rigidbody.
                 TankHealth targetHealth = targetRigidbody.GetComponent<TankHealth> ();
 
