@@ -26,7 +26,7 @@ namespace Complete
             BreakObject breakObject = other.gameObject.GetComponent<BreakObject>();
             if (breakObject)
             {
-                breakObject.Broken();
+                breakObject.Damage();
             }
 
 
