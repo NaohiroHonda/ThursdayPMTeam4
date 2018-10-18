@@ -22,6 +22,8 @@ namespace Complete
         private float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
         private bool m_Fired;                       // Whether or not the shell has been launched with this button press.
 
+        private PBulletCounter bulletCounter;
+
 
         private void OnEnable()
         {
@@ -38,11 +40,15 @@ namespace Complete
 
             // The rate that the launch force charges up is the range of possible forces by the max charge time.
             m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
+
+            bulletCounter = gameObject.GetComponent<PBulletCounter>();
+            bulletCounter.SetNumber(m_PlayerNumber);
         }
 
 
         private void Update ()
         {
+            if (!bulletCounter.IsAbleLaunch) return;
             // The slider should have a default value of the minimum launch force.
             m_AimSlider.value = m_MinLaunchForce;
 
@@ -83,6 +89,7 @@ namespace Complete
 
         private void Fire ()
         {
+            bulletCounter.Launch();
             // Set the fired flag so only Fire is only called once.
             m_Fired = true;
 
