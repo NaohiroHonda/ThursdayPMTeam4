@@ -32,7 +32,7 @@ namespace Complete
         }
 
 
-        private void OnEnable()
+        private void OnEnable() //ゲームオブジェクトがアクティブになった時に呼ばれるメソッドです。
         {
             // When the tank is enabled, reset the tank's health and whether or not it's dead.
             m_CurrentHealth = m_StartingHealth;
@@ -59,7 +59,7 @@ namespace Complete
         }
 
 
-        private void SetHealthUI ()
+        private void SetHealthUI () //HPの丸いゲージを表示
         {
             // Set the slider's value appropriately.
             m_Slider.value = m_CurrentHealth;
@@ -87,5 +87,27 @@ namespace Complete
             // Turn the tank off.
             gameObject.SetActive (false);
         }
+
+
+        public void TakeHealer() //HP回復(新)
+        {
+            m_CurrentHealth += 100.0f;
+
+            if (m_CurrentHealth >= m_StartingHealth)
+            {
+                m_CurrentHealth = m_StartingHealth;
+            }
+
+            SetHealthUI();
+        }
+
+        //void Update()
+        //{
+        //    if (GameInformation.Healing == true)
+        //    {
+        //        TakeHealer();
+        //        GameInformation.Healing = false;
+        //    }
+        //}
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.Generic; //リスト用
 
 namespace Complete
 {
@@ -15,7 +16,9 @@ namespace Complete
         public GameObject m_TankPrefab;             // Reference to the prefab the players will control.
         public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
 
-        
+        public GameObject players; //仮のプレイヤーのオブジェクト(新)
+        public List<GameObject> HealingBox = new List<GameObject>();
+
         private int m_RoundNumber;                  // Which round the game is currently on.
         private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
         private WaitForSeconds m_EndWait;           // Used to have a delay whilst the round or game ends.
@@ -36,17 +39,23 @@ namespace Complete
             StartCoroutine (GameLoop ());
         }
 
-
-        private void SpawnAllTanks()
+        void Update()
         {
+        }
+
+
+        private void SpawnAllTanks() //プレイヤーの生成
+        {
+
             // For all the tanks...
             for (int i = 0; i < m_Tanks.Length; i++)
             {
                 // ... create them, set their player number and references needed for control.
                 m_Tanks[i].m_Instance =
-                    Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as GameObject;
+                    Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation, players.transform) as GameObject; //プレイヤーがplayersに生成(修正)
                 m_Tanks[i].m_PlayerNumber = i + 1;
                 m_Tanks[i].Setup();
+                m_Tanks[i].m_Instance.name = "Player" + (i + 1); //プレイヤーをPlayerの名前を付ける(新)
             }
         }
 
@@ -110,6 +119,15 @@ namespace Complete
 
             // Wait for the specified length of time until yielding control back to the game loop.
             yield return m_StartWait;
+
+            for (int i = 0; i < HealingBox.Count; i++) //毎ターンアイテムの再生(新)
+            {
+                HealingBox[0].SetActive(true);
+                HealingBox[1].SetActive(true);
+                HealingBox[2].SetActive(true);
+                HealingBox[3].SetActive(true);
+                HealingBox[4].SetActive(true);
+            }
         }
 
 
@@ -237,7 +255,7 @@ namespace Complete
 
 
         // This function is used to turn all the tanks back on and reset their positions and properties.
-        private void ResetAllTanks()
+        private void ResetAllTanks() //プレイヤー置き直す
         {
             for (int i = 0; i < m_Tanks.Length; i++)
             {
